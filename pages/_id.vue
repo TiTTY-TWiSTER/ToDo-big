@@ -2,7 +2,7 @@
 	<!-- <div>{{$route.params.id}}</div> -->
 	<div class="container">		
 		<h1>{{req.Title}}</h1>			
-		
+		<button class="btn btn-primary" @click.prevent="changeV = !changeV" v-show='save2.length == 0'>Добавить</button>
 		<!-- <div v-for='item in req.description.split("*")'> здесь получаем из asyncData -->
 		<div v-for='(item,index) in save2'> <!--а здесь нет; передаем индекс для удаления элемента-->
 			<button class="btn btn-primary" @click.prevent="status();changeV = !changeV" v-show='index == 0'>Добавить</button>
