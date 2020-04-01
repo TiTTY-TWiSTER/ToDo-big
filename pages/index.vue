@@ -27,7 +27,7 @@ export default {
 			this.RedText()
 		},
 	methods:{
-		RedText(){
+		RedText(){      
 				var arr = []
 				for(var i = 0; i<this.all.length;i++){
 					let goodChange = this.all[i].description.split('*') //размечаем кол-во заметок по нашему разделителю
