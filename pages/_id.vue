@@ -2,20 +2,22 @@
 	<!-- <div>{{$route.params.id}}</div> -->
 	<div class="container">
 
-		<h1>{{req.Title}}</h1>
-		<!-- <div v-for='item in req.description.split("*")'> -->
-		<div v-for='(item,index) in save2'>
-			<p>{{item}}</p>
-			<span @click='del(index)'>x</span>
-			<button v-show='item !=""' @click.prevent="post(item)">изменить</button>
+		<div class="row">
+			<h1>{{req.Title}}</h1>
+			<button class="btn" @click.prevent="post(item,index)">Добавить</button>
 		</div>
-
+		<!-- <div v-for='item in req.description.split("*")'> здесь получаем из asyncData -->
+		<div v-for='(item,index) in save2'> <!--а здесь нет; передаем индекс для удаления элемента-->
+			<p>{{item}}</p>
+			<button v-show='item !=""' @click.prevent="post(item,index)">изменить</button>
+		</div>
+	
 		<div v-show='changeV == true'>
 			<input type="text" id="changeText" v-model='itemV' class="mt-5 form-control">
 			<div class="mt-4">
-				<button class="btn btn-primary">Сохранить</button>
-				<button class="btn btn-secondary">отменить редактирование</button>
-				<button class="btn btn-danger">удалить</button>
+				<button class="btn btn-primary" @click='news'>Сохранить</button>
+				<button class="btn btn-secondary" @click='status'>отменить редактирование</button>
+				<button class="btn btn-danger" @click.prevent='del'>удалить</button>
 			</div>
 		</div>
 
@@ -47,7 +49,7 @@ import JQuery from 'jquery'
 		},
 		data(){
 			return{
-				itemV:'',
+				itemV:'',//отслеживание динамического параметра для input
 				changeV:false,
 				save:[],
 				save2:''
@@ -60,12 +62,15 @@ import JQuery from 'jquery'
 					return item
 				}
 			})
+			// for(var item = 0;item<this.save2.length;item++){
+			// 	console.log(this.save2[item]+'*')
+			// }
 			console.log(this.save2)
 		},
 		methods:{
-			post(data){
-
-				this.itemV = data
+			post(data,index){
+				localStorage.setItem('index',index) //нужно для удаления пункта ToDo по id
+				this.itemV = data + '*'
 
 				this.changeV = !this.changeV
 
@@ -75,8 +80,31 @@ import JQuery from 'jquery'
 					},5)
 				}
 			},
-			del(data){
-				this.save2.splice(data,1)
+			del(){
+				let index = localStorage.getItem('index')
+				this.save2.splice(index,1)
+			},
+			news(){
+				var id = this.req.id
+				var news = this.save2 //получили динамический параметр от главной страницы
+
+				var FormData = require('form-data'); //собрали данные для отправки через FormData
+			    var obj = new FormData();
+			    obj.append('id', id);
+			    obj.append('news', news);
+
+			    var req = fetch('https://maximum-movies.com/todochange',{ //делаем POST запрос
+		          method: 'post',
+		          body:obj
+			    }).then((data) => {
+		          window.location.reload()
+		            return data;
+		        })
+			    
+			},
+			status(){
+				this.save2.push("*"+this.itemV)
+				console.log(this.save2)
 			}
 		}
 	}
