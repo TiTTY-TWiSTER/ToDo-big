@@ -13,15 +13,30 @@
     	<div class="col-md-6" v-show='add'>
     		<input type="text" class="form-control" placeholder="Название" v-model='title'>
     		<div id="place">
-    			<input type="text" class="form-control mt-2" v-show='title!=""' placeholder="Добавить пункт" v-model='points'>				
+    			<input type="text" class="form-control mt-2" v-show='title!=""' placeholder="Добавить пункт" v-model='points'>    						
     		</div>
     		<button class="btn btn-success mt-2" v-show='title!=""' @click='more'>Еще</button>
+    		
+    		<button class="btn btn-info mt-2" @click='proove'>status</button>
     	</div>
+    </div>
+    <div class="container mt-3">
+    	<h3>{{title}}</h3>
+    	<ul>
+    		<div v-for='(li,index) in copy'>
+    			<li>{{li}}</li>
+    			<button type="button" class="close" aria-label="Close" @click='close(index)'>
+				  <span aria-hidden="true">&times;</span>
+				</button>
+    		</div>
+    	</ul>
+    	<button class="btn btn-dark mt-2" v-show='copy.length > 0'>Сохранить</button>
     </div>
   </div>
 </template>
 
 <script>
+
 import JQuery from 'jquery'
  	let $ = JQuery
 
@@ -32,32 +47,19 @@ export default {
 	},
 	data(){
 			return{
-				all2:[],
 				add:false,
 				title:'',
 				points:'',
-				copy:[]
+				copy:[],
 			}
 		},
 	mounted(){
-			this.RedText()
+
 		},
+	components: {
+        	
+        },
 	methods:{
-		RedText(){      
-				var arr = []
-				for(var i = 0; i<this.all.length;i++){
-					let goodChange = this.all[i].description.split('*') //размечаем кол-во заметок по нашему разделителю
-					arr.push(goodChange) 			
-				}
-				this.all2 = arr
-				this.result = []
-				for(var num = 0;num<this.all2.length;num++){
-					for(var f = 0;f<this.all2[num].length;f++){
-						this.result.push(this.all2[num][f])
-					}
-					console.log(this.result)
-				}
-			},
 			change(id){
 				this.$router.push('/'+ id)
 			},
@@ -66,7 +68,21 @@ export default {
 			},
 			more(){
 				this.copy.push(this.points)
-				$('#place').append('<input type="text" class="form-control mt-2" placeholder="Добавить пункт" v-model="points">')
+				this.points = ''
+				console.log(this.copy)
+				//$('#place').append("<input type='text' class='form-control' placeholder='Название'>")
+			},
+			close(index){
+				this.copy.splice(index,1)
+			},
+			proove(){
+				console.log(this.copy)
+				var stinks = $('#place').find('input')
+				for(var ass=0;ass<stinks.length;ass++){
+					console.log(stinks[ass].value)
+				}
+				//this.copy.push(this.points)
+				//console.log(stinks)
 			}
 	}
 }
