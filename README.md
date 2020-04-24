@@ -1,6 +1,6 @@
 # ToDo big
 
-> My peachy Nuxt.js project
+> http://spb.maximum-seo.ru/ - example
 
 ## Build Setup
 
